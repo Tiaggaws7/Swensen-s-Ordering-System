@@ -3,5 +3,6 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/Swensen-s-Ordering-System" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Swensen_API" vcs="Git" />
   </component>
 </project>

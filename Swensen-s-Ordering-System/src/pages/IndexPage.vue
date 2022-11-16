@@ -1,10 +1,15 @@
 <template>
   <q-page>
+
+    <q-input v-model="category" label=" Add category" />
+    <q-btn color="primary" label="valider" @click="addCategory" />
+
     <NavComponent @showCart="showCart = true"/>
     <ChooseMenuComponent @showCart="showCart = true"/>
     <q-dialog v-model="showCart" full-width>
       <CartComponent/>
     </q-dialog>
+
   </q-page>
 </template>
 
@@ -23,12 +28,23 @@ export default defineComponent({
     return {
       showCart : false,
       personalize : false,
+      category: ""
     }
   },
   methods: {
     toggleShowCart(){
       this.showCart = !this.showCart
-    }
-  }
-})
+    },
+    addCategory () {
+      const data = {
+        name: this.name
+      }
+      this.$api
+        .post("/category/add", data)
+        .then((res) => {
+          console.log(res)
+        })
+      },
+    },
+  })
 </script>

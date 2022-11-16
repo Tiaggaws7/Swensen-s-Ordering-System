@@ -1,5 +1,5 @@
 // user.routes.js
-const authJwt = require("../middleware/authJwt");
+const authJwt = require("../middleware/auth.jwt");
 module.exports = (app) => {
     const user_controller = require("../controllers/user.controller");
     var router = require("express").Router();
