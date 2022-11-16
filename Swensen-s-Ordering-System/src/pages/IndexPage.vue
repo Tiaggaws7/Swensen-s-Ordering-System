@@ -39,9 +39,7 @@ export default defineComponent({
       const data = {
         name: this.name
       }
-      this.$api
-        .post("/category/add", data)
-        .then((res) => {
+      this.$api.post("/category/add", data).then((res) => {
           console.log(res)
         })
       },

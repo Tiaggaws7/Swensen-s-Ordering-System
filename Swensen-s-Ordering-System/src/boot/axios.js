@@ -8,7 +8,7 @@ import axios from 'axios'
 // "export default () => {}" function below (which runs individually
 // for each client)
 // example: const RESTURL = "http://172.26.117.16:3000/api"
-const RESTURL = "http://sql12.freemysqlhosting.net/api"
+const RESTURL = "http://localhost:3000/api"
 
 const api = axios.create({
   baseURL:  RESTURL,

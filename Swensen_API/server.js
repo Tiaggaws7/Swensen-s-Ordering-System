@@ -17,11 +17,12 @@ app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
 });
 
-require("./app/routes/cart.routes");(app);
-require("./app/routes/category.routes");(app);
-require("./app/routes/file.routes");(app);
-require("./app/routes/flavour.routes");(app);
-require("./app/routes/menu.routes");(app);
-require("./app/routes/order.routes");(app);
-require("./app/routes/topping.routes");(app);
-require("./app/routes/user.routes");(app);
+require("./app/routes/category.routes")(app);
+
+require("./app/routes/cart.routes")(app);
+require("./app/routes/file.routes")(app);
+require("./app/routes/flavour.routes")(app);
+require("./app/routes/menu.routes")(app);
+require("./app/routes/order.routes")(app);
+require("./app/routes/topping.routes")(app);
+require("./app/routes/user.routes")(app);

@@ -1,5 +1,5 @@
 const bcrypt = require("bcryptjs");
-const Category = require("../model/category.model.js");
+const Category = require("../models/category.model.js");
 const createNewCategory = (req, res) => {
     if (!req.body) {
         res.status(400).send({
