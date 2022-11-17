@@ -11,11 +11,14 @@ const createNewCategory = (req, res) => {
         name: req.body.name
     });
     Category.create(categoryObj, (err, data) => {
+        console.log(req.body)
         if (err) {
             res.status(500).send({
                 message: err.message || "Some error occured while creating.",
             });
-        } else res.send(data);
+        } else {
+            res.send(data);
+        }
     });
 };
 

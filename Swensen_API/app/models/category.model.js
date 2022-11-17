@@ -10,7 +10,7 @@ const Category = function (category) {
 const expireTime = "1h";
 
 Category.create = ( newCategory, result ) => {
-    sql.query("INSERT INTO category SET ?", newCategory, (err, res) => {
+    sql.query("INSERT INTO Category SET ?", newCategory, (err, res) => {
         if (err) {
             console.log("Query error: " + err);
             result(err, null);
@@ -31,3 +31,5 @@ Category.create = ( newCategory, result ) => {
         });
     })
 }
+
+module.exports = Category
