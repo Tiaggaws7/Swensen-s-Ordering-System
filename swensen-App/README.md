@@ -1,4 +1,4 @@
-# Swensen’s Ordering System (swensen-s-ordering-system)
+# Quasar App (swensen-app)
 
 A Quasar Project
 
