@@ -1,4 +1,3 @@
-const bcrypt = require("bcryptjs");
 const Category = require("../models/category.model.js");
 
 const getAllCategory = (req, res) => {

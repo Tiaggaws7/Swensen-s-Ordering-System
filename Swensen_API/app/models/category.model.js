@@ -1,6 +1,4 @@
 const sql = require("./db");
-const jwt = require("jsonwebtoken");
-const scKey = require("../config/jwt.config"); // Maybe a problem with it
 
 //Constructor
 const Category = function (category) {
