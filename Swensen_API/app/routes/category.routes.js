@@ -1,4 +1,3 @@
-const category_controller = require("../controllers/category.controller");
 module.exports = (app) => {
     const category_controller = require("../controllers/category.controller")
     var router = require("express").Router();

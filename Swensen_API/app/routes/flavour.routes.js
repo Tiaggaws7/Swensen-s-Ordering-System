@@ -1,4 +1,3 @@
-const flavour_controller = require("../controllers/flavour.controller");
 module.exports = (app) => {
     const flavour_controller = require("../controllers/flavour.controller")
     var router = require("express").Router();
