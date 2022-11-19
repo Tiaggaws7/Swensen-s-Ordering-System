@@ -5,8 +5,6 @@ const Category = function (category) {
     this.name = category.name;
 };
 
-const expireTime = "1h";
-
 Category.getAllRecords = (result) => {
     sql.query("SELECT * FROM Category", (err, res) => {
         if (err) {

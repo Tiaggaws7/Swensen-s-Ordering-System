@@ -1,4 +1,3 @@
-const authJWT = require("../middleware/auth.jwt")
 const category_controller = require("../controllers/category.controller");
 module.exports = (app) => {
     const category_controller = require("../controllers/category.controller")
