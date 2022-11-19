@@ -1,8 +1,10 @@
-const authJWT = require("../middleware/auth.jwt")
-const cart_controller = require("../controllers/cart.controller");
 module.exports = (app) => {
     const cart_controller = require("../controllers/cart.controller")
     var router = require("express").Router();
-    //router.post("/add", cart_controller.createNewCategory);
+    router.post("/add", cart_controller.createNewCart);
+    router.get("/all", cart_controller.getAllCart);
+    router.put("/:id", cart_controller.updateCart);
+    router.delete("/:id", cart_controller.deleteCart);
+
     app.use("/api/cart", router);
 };
