@@ -25,4 +25,4 @@ require("./app/routes/flavour.routes")(app);
 require("./app/routes/menu.routes")(app);
 require("./app/routes/order.routes")(app);
 require("./app/routes/topping.routes")(app);
-require("./app/routes/user.routes")(app);
+require("./app/routes/customer.routes")(app);
