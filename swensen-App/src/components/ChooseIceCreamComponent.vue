@@ -55,8 +55,14 @@ export default {
   },
   name: "ChooseIceCream",
   beforeMount() {
-    this.flavours = this.store.flavours
-    this.toppings = this.store.toppings
+    this.$api.get("/flavour/all")
+      .then(res => {
+        this.flavours = res.data
+      })
+    this.$api.get("/toppings/all")
+      .then(res => {
+        this.toppings = res.data
+      })
   },
   data() {
     return {

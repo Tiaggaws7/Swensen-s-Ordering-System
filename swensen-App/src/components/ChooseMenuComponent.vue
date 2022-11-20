@@ -33,14 +33,27 @@ import ChooseIceCream from "components/ChooseIceCreamComponent";
 export default {
   name: "ChooseMenuComponent",
   components: {ChooseIceCream},
+  mounted() {
+    this.getMenus()
+  },
   data(){
     return  {
       store: useGlobalStateStore(),
+      menus: [],
       selectedMenu: {},
       detail : false
     }
   },
   methods : {
+    getMenus() {
+      this.$api.get("/menu/all")
+        .then(res => {
+          console.log(res.data)
+        })
+        .catch(err => {
+          console.log("getMenus error: " + err)
+        })
+    },
     getPrice(menu){
       let sum = menu.flavour[0].price
       menu.toppings.map( topping => {
