@@ -40,7 +40,7 @@ export default {
       email: "",
       password: "",
       isPwd: true,
-      errorMessage: "Wrong password admin",
+      errorMessage: "",
     }
   },
   methods: {
