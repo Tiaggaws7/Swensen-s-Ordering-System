@@ -76,6 +76,7 @@ export const useGlobalStateStore = defineStore("global", {
     cart: [
     ],
     order: [],
+    loggedUser: {}
   }),
 
   getters: {

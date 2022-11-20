@@ -53,11 +53,22 @@
         ]"
     />
 
+    <q-input
+      filled
+      v-model="password"
+      label="Password"
+      lazy-rules
+      :rules="[
+          val => val !== null && val !== '' || 'Please type your Password',
+          val => validatePassword(val) || 'Between 6 and 50 characters'
+        ]"
+    />
+
     <q-toggle v-model="accept" label="I accept the license and terms"/>
 
     <div>
       <q-btn label="Register" type="submit" color="primary" :disable="!verifyForm()"
-             @click="this.$router.push('/')"/>
+             @click="registerCustomer()"/>
       <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm"/>
     </div>
   </q-form>
@@ -73,6 +84,7 @@ export default {
       address: "",
       city: "",
       zipcode: "",
+      password: "",
       accept: false,
     }
   },
@@ -96,12 +108,16 @@ export default {
     validateZipCode(val) {
       return val && val > 0 && val < 999999
     },
+    validatePassword(val) {
+      return val && val.length >= 6 && val.length < 50
+    },
     verifyForm() {
       return this.validateName(this.name) &&
         this.validateEmail(this.email) &&
         this.validateAddress(this.address) &&
         this.validateCity(this.city) &&
         this.validateZipCode(this.zipcode) &&
+        this.validatePassword(this.password) &&
         this.accept
     },
     onReset() {
@@ -111,6 +127,25 @@ export default {
       this.city = ""
       this.zipcode = ""
       this.accept = false
+    },
+    registerCustomer() {
+      const data = {
+        name: this.name,
+        mail: this.email,
+        password: this.password,
+        address: this.address,
+        postCode: this.zipcode,
+        city: this.city
+      }
+      this.$api.post("/customer/add", data)
+        .then((res) => {
+          if (res.status == 200){
+            console.log(res.data)
+          }
+        })
+        .catch((err) => {
+          console.log("registerCustomer() error: " + err);
+        })
     }
   }
 }

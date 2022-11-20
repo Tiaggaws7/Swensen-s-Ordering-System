@@ -20,6 +20,7 @@
         />
       </template>
     </q-input>
+    <p>{{ errorMessage }}</p>
 
     <div>
       <q-btn label="Login" color="primary" @click="verifyCouple(this.email, this.password)"/>
@@ -29,15 +30,17 @@
 </template>
 
 <script>
-import { Notify } from "quasar";
+import {useGlobalStateStore} from "stores/globalState";
 
 export default {
   name: "SigninPage",
   data() {
     return {
+      store : useGlobalStateStore(),
       email: "",
       password: "",
       isPwd: true,
+      errorMessage: "Wrong password admin",
     }
   },
   methods: {
@@ -46,31 +49,31 @@ export default {
         if ( password == "123456") {
           this.$router.push('/dashboard')
         } else {
-          Notify.create({
-            type: 'negative',
-            message: `Wrong password admin`,
-          })
-        }
-      } else if ( email == "123@gmail.com" ) {
-        if (password == "123456") {
-          this.$router.push('/')
-        } else {
-          Notify.create({
-            type: 'negative',
-            message: `Wrong password User`,
-          })
+          this.errorMessage = "Wrong password admin"
         }
       } else  {
-        Notify.create({
-          type: 'negative',
-          message: `Wrong email / password !`,
-        })
+        const data = {
+          mail: this.email,
+          password: this.password
+        }
+        this.$api.post("/customer/login", data)
+          .then(res => {
+            if (res.status == 200){
+              this.errorMessage = ""
+              this.store.loggedUser = res.data
+              this.$router.push('/')
+            }
+          })
+          .catch((err) => {
+            this.errorMessage = "Wrong Mail / Password"
+          })
       }
     },
     onReset() {
       this.email = ""
       this.password = ""
       this.isPwd = true
+      this.errorMessage = ""
     }
   }
 }
@@ -81,6 +84,11 @@ export default {
 .qform {
   width: 30%;
   margin: 0 auto;
+}
+
+p {
+  color: red;
+  font-weight: bold ;
 }
 
 </style>

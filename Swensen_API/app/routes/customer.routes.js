@@ -5,6 +5,7 @@ module.exports = (app) => {
     router.get("/all", customer_controller.getAllCustomer);
     router.put("/:id", customer_controller.updateCustomer);
     router.delete("/:id", customer_controller.deleteCustomer);
+    router.post("/login", customer_controller.loginCustomer);
 
     app.use("/api/customer", router);
 };

@@ -75,4 +75,30 @@ Customer.delete = ( id, result ) => {
     });
 }
 
+Customer.login = (account, result) => {
+    sql.query(
+        "SELECT * FROM Customer WHERE mail = ?", account.mail,
+        (err, res) => {
+            if (err) {
+                console.log("Query error: " + err);
+                result(err, null);
+                return;
+            }
+            if (res.length) {
+                const validPassword = account.password == res[0].password
+
+                if (validPassword) {
+                    result(null, res[0]);
+                    return;
+                } else {
+                    console.log("Password invalid.");
+                    result({ kind: "invalid_pass" }, null);
+                    return;
+                }
+            }
+            result({ kind: "not_found" }, null);
+        }
+    );
+};
+
 module.exports = Customer

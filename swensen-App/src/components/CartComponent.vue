@@ -10,10 +10,10 @@
         <th> PRICE </th>
       </tr>
       <tr v-for="menu in cart" :key="menu.id" class="table-row">
-        <td> {{menu.name}} </td>
-        <td> {{menu.flavour.name}} </td>
-        <td> <div v-for="topping in menu.toppings" :key="topping" > {{ topping }} </div></td>
-        <td> {{ menu.price }} $ </td>
+        <td> {{menu.details.name}} </td>
+        <td> {{menu.details.flavour}} </td>
+        <td> <div v-for="topping in menu.details.toppings" :key="topping" > {{ topping }} </div></td>
+        <td> {{ menu.totalPrice }} $ </td>
         <td>
           <q-btn square color="red" icon="delete" @click="deleteWithID(menu.id)" />
         </td>
@@ -35,6 +35,7 @@ export default {
   mounted() {
     this.cart = this.store.cart
     this.updateTotal()
+    this.getCart()
   },
   data() {
     return {
@@ -44,15 +45,34 @@ export default {
     }
   },
   methods:{
+    getCart() {
+      this.$api.get("/cart/all")
+        .then((res) => {
+          if (res.status == 200){
+            console.log(res.data)
+            this.cart = res.data
+          }
+        })
+        .catch((err) => {
+          console.log("getCart() error: " + err);
+        })
+    },
     deleteWithID(id){
-      this.cart = this.cart.filter(element => {
-        return element.id != id
-      })
+      this.$api.delete("/cart/" + id)
+        .then((res) => {
+          if (res.status == 200){
+            console.log(res.data)
+            this.getCart()
+          }
+        })
+        .catch((err) => {
+          console.log("deleteWithID() error: " + err);
+        })
     },
     updateTotal(){
       this.total = 0
       this.cart.map(element => {
-        let sum = element.price
+        let sum = element.totalPrice
         this.total = this.total + sum
       })
     },
@@ -63,6 +83,8 @@ export default {
     }
   }
 }
+
+
 </script>
 
 <style scoped>

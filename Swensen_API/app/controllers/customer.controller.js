@@ -82,9 +82,41 @@ const deleteCustomer = (req, res) =>{
     });
 };
 
+const loginCustomer = (req, res) => {
+    if (!req.body) {
+        res.status(400).send({
+            message: "Content can not be empty.",
+        });
+    }
+
+    const account = new Customer({
+        mail: req.body.mail,
+        password: req.body.password
+    });
+
+    Customer.login(account, (err, data)=>{
+        if(err){
+            if(err.kind == "not_found"){
+                res.status(401).send({
+                    message: "Not found " + req.body.mail
+                });
+            } else if (err.kind == "invalid_pass"){
+                res.status(401).send({
+                    message: "Invalid Password"
+                });
+            } else{
+                res.status(500).send({
+                    message: "Error retriveing " + req.body.mail
+                });
+            }
+        }else res.send(data);
+    });
+};
+
 module.exports = {
     getAllCustomer,
     createNewCustomer,
     updateCustomer,
-    deleteCustomer
+    deleteCustomer,
+    loginCustomer
 };
