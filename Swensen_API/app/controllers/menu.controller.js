@@ -22,7 +22,8 @@ const createNewMenu = (req, res) => {
         categoryId: req.body.categoryId,
         name: req.body.name,
         image: req.body.image,
-        hidden: req.body.hidden
+        hidden: req.body.hidden,
+        price: req.body.price
     });
 
     Menu.create(menuObj, (err, data) => {
@@ -46,8 +47,8 @@ const updateMenu = (req, res) =>{
         categoryId: req.body.categoryId,
         name: req.body.name,
         image: req.body.image,
-        hidden: req.body.hidden
-
+        hidden: req.body.hidden,
+        price: req.body.price
     };
     Menu.updateByID(req.params.id, data, (err, result)=>{
         if(err){

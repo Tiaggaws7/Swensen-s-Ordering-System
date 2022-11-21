@@ -7,6 +7,7 @@ const Menu = function (menu) {
     this.name = menu.name;
     this.image = menu.image
     this.hidden = menu.hidden;
+    this.price = menu.price
 };
 
 Menu.getAllRecords = (result) => {
@@ -40,8 +41,8 @@ Menu.create = ( newMenu, result ) => {
 
 Menu.updateByID = (id, data, result) => {
     sql.query(
-        "UPDATE Menu SET flavourId=?, categoryId=?, name=?, image=?, hidden=? WHERE id=?",
-        [data.flavourId, data.categoryId, data.name, data.image, data.hidden, id],
+        "UPDATE Menu SET flavourId=?, categoryId=?, name=?, image=?, hidden=?, price=? WHERE id=?",
+        [data.flavourId, data.categoryId, data.name, data.image, data.hidden, data.price, id],
         (err, res) => {
             if (err) {
                 console.log("Query error: " + err);
