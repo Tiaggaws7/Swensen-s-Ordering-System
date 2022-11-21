@@ -32,10 +32,9 @@ import {useGlobalStateStore} from "stores/globalState";
 
 export default {
   name: "CartPage",
-  mounted() {
-    this.cart = this.store.cart
+  async mounted() {
+    await this.getCart()
     this.updateTotal()
-    this.getCart()
   },
   data() {
     return {
@@ -50,6 +49,10 @@ export default {
         .then((res) => {
           if (res.status == 200){
             console.log(res.data)
+            res.data.map(cart => {
+              cart.details = JSON.parse(cart.details)
+              console.log(cart.details)
+            })
             this.cart = res.data
           }
         })

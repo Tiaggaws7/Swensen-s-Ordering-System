@@ -1,11 +1,11 @@
 <template>
   <div v-if="!detail">
     <h1 class="text-center">Choose your menu</h1>
-    <div v-for="category in this.store.categories" :key="category.id" class="card-flavour-container">
+    <div v-for="category in this.categories" :key="category.id" class="card-flavour-container">
       <h3 class="text-center text-bold" >{{category.name}}</h3>
       <br/>
       <div class="flex justify-around">
-        <q-card :class="menu !== selectedMenu ? 'card-menu' : 'card-menu-selected'" v-for="menu in this.store.menus.filter( item => item.category.name == category.name)" :key="menu.id" @click="selectedMenu = menu, detail=true">
+        <q-card :class="menu !== selectedMenu ? 'card-menu' : 'card-menu-selected'" v-for="menu in this.menus.filter( item => item.categoryId == category.id)" :key="menu.id" @click="selectedMenu = menu, detail=true">
           <img :src="require(`../assets/${menu.image}`)" />
           <q-card-section>
             <div class="text-h6">{{menu.name}}</div>
@@ -34,20 +34,29 @@ export default {
   name: "ChooseMenuComponent",
   components: {ChooseIceCream},
   mounted() {
+    this.getCategories()
     this.getMenus()
   },
   data(){
     return  {
       store: useGlobalStateStore(),
       menus: [],
+      categories: [],
       selectedMenu: {},
       detail : false
     }
   },
   methods : {
+    getCategories() {
+      this.$api.get("/category/all")
+        .then(res => {
+          this.categories = res.data
+        })
+    },
     getMenus() {
       this.$api.get("/menu/all")
         .then(res => {
+          this.menus = res.data
           console.log(res.data)
         })
         .catch(err => {
