@@ -1,7 +1,7 @@
 <template>
 <h1 class="text-center">Payment page</h1>
   <div class="flex flex-center column" v-if="paymentOK" >
-    <h3 > Your command wil arrive soon !</h3>
+    <h3 > Your command will arrive soon !</h3>
     <q-btn color="primary" @click="this.$router.push('/')"> Go back to home </q-btn>
   </div>
 

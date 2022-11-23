@@ -3,6 +3,7 @@
   <h4 class="text-center" >Enter your informations</h4>
   <q-form
     @reset="onReset"
+    @submit.prevent=""
     class="q-gutter-md qform "
     ref="checkout form"
   >
@@ -58,6 +59,7 @@
       v-model="password"
       label="Password"
       lazy-rules
+      type="password"
       :rules="[
           val => val !== null && val !== '' || 'Please type your Password',
           val => validatePassword(val) || 'Between 6 and 50 characters'
@@ -141,6 +143,7 @@ export default {
         .then((res) => {
           if (res.status == 200){
             console.log(res.data)
+            this.$router.push('/signin')
           }
         })
         .catch((err) => {

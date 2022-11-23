@@ -21,7 +21,7 @@
     </table>
     <p class="text-center text-h5 "><strong>Total</strong></p>
     <p class="text-center text-h5">{{this.total}} $</p>
-    <q-btn class="glossy full-width"  color="deep-orange" label="Checkout" @click="this.$router.push('/checkout')"/>
+    <q-btn class="glossy full-width"  color="deep-orange" label="Checkout" @click="verifyLogin()"/>
   </div>
 </q-card>
 </template>
@@ -54,6 +54,15 @@ export default {
               console.log(cart.details)
             })
             this.cart = res.data
+            if (Object.keys(this.store.loggedUser).length === 0) {
+              this.cart = {}
+            }
+            else {
+              const cart = res.data.filter(element => {
+                return element.customerId === this.store.loggedUser.id
+              })
+              this.cart = cart
+            }
           }
         })
         .catch((err) => {
@@ -79,6 +88,14 @@ export default {
         this.total = this.total + sum
       })
     },
+    verifyLogin(){
+      if (Object.keys(this.store.loggedUser).length === 0 ){
+        this.$router.push('/checkout')
+      }
+      else {
+        this.$router.push('/payment')
+      }
+    }
   },
   watch: {
     cart() {

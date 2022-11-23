@@ -5,7 +5,7 @@
       <ul>
         <li>
           <div v-if="Object.keys(store.loggedUser).length === 0">
-            <a class="signin-signup" @click="this.$router.push('/signin')" >Sign in </a>
+            <a class="signin-signup" @click="this.$router.push({ path: '/signin'})" >Sign in </a>
             <a class="signin-signup" @click="this.$router.push('/signup')">Sign up</a>
           </div>
           <div v-else class="flex">
