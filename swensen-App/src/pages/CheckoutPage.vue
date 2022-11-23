@@ -1,4 +1,5 @@
 <template>
+  <NavComponent @showCart="showCart = true"/>
 <h1 class="text-center"> Checkout</h1>
     <q-form
       @reset="onReset"
@@ -62,8 +63,11 @@
 </template>
 
 <script>
+import NavComponent from "components/NavComponent";
+
 export default {
   name: "PaymentPage",
+  components: {NavComponent,},
   data() {
     return  {
       name : "",

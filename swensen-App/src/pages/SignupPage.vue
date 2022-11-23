@@ -1,4 +1,5 @@
 <template>
+  <NavComponent @showCart="showCart = true"/>
   <h1 class="text-center"> Register page</h1>
   <h4 class="text-center" >Enter your informations</h4>
   <q-form
@@ -77,8 +78,13 @@
 </template>
 
 <script>
+
+import NavComponent from "components/NavComponent";
+
+
 export default {
   name: "SignupPage",
+  components: {NavComponent,},
   data() {
     return {
       name: "",

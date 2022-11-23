@@ -1,4 +1,5 @@
 <template>
+  <NavComponent @showCart="showCart = true"/>
   <div class="title">
     <h3 style="text-align: center;">Welcome to the dashboard ! Here you can see how much buisness is booming.</h3>
     <q-btn @click="$router.push('/admin')">click here to go to admin page</q-btn>
@@ -15,8 +16,11 @@
 
 <script>
 import {useGlobalStateStore} from "stores/globalState";
+import NavComponent from "components/NavComponent";
+
 export default {
   name: "DashboardPage",
+  components: {NavComponent,},
   data (){
     return{
       store: useGlobalStateStore(),

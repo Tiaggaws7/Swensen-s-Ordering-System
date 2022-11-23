@@ -1,4 +1,5 @@
 <template>
+  <NavComponent @showCart="showCart = true"/>
   <div>
     <h3>Welcome to the admin page</h3>
     <q-btn @click="$router.push('/dashboard')">click here to go to dashboard</q-btn>
@@ -38,6 +39,7 @@ import AdminToppingsComponent from "../components/AdminToppingsComponent.vue"
 import AdminFlavoursComponent from "../components/AdminFlavoursComponent.vue";
 import AdminCategoryComponent from "../components/AdminCategoryComponent.vue";
 import AdminMenusComponent from "../components/AdminMenusComponent.vue";
+import NavComponent from "components/NavComponent";
 export default {
   name: "AdminPage",
   data() {
@@ -45,7 +47,7 @@ export default {
       store: useGlobalStateStore(),
     };
   },
-  components: { AdminToppingsComponent, AdminFlavoursComponent, AdminCategoryComponent, AdminMenusComponent }
+  components: { AdminToppingsComponent, AdminFlavoursComponent, AdminCategoryComponent, AdminMenusComponent, NavComponent }
 }
 
 </script>

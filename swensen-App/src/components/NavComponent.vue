@@ -1,6 +1,6 @@
 <template>
   <header>
-    <h3>Swensen's-Ordering-System</h3>
+    <h3 @click="this.$router.push('/')">Swensen's-Ordering-System</h3>
     <nav>
       <ul>
         <li>

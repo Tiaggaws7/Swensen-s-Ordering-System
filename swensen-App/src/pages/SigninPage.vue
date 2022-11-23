@@ -1,4 +1,5 @@
 <template>
+  <NavComponent @showCart="showCart = true"/>
   <h1 class="text-center"> Login</h1>
   <q-form
     @reset="onReset"
@@ -31,9 +32,12 @@
 
 <script>
 import {useGlobalStateStore} from "stores/globalState";
+import NavComponent from "components/NavComponent";
+
 
 export default {
   name: "SigninPage",
+  components: {NavComponent,},
   data() {
     return {
       store : useGlobalStateStore(),

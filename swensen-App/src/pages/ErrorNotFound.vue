@@ -1,4 +1,5 @@
 <template>
+  <NavComponent @showCart="showCart = true"/>
   <div class="fullscreen bg-blue text-white text-center q-pa-md flex flex-center">
     <div>
       <div style="font-size: 30vh">
@@ -24,8 +25,11 @@
 
 <script>
 import { defineComponent } from 'vue'
+import NavComponent from "components/NavComponent";
+
 
 export default defineComponent({
-  name: 'ErrorNotFound'
+  name: 'ErrorNotFound',
+  components: {NavComponent,},
 })
 </script>

@@ -1,4 +1,5 @@
 <template>
+  <NavComponent @showCart="showCart = true"/>
 <h1 class="text-center">Payment page</h1>
   <div class="flex flex-center column" v-if="paymentOK" >
     <h3 > Your command will arrive soon !</h3>
@@ -36,9 +37,12 @@
 <script>
 
 import {useGlobalStateStore} from "stores/globalState";
+import NavComponent from "components/NavComponent";
+
 
 export default {
   name: "PaymentPage",
+  components: {NavComponent,},
   data(){
     return {
       store : useGlobalStateStore(),

@@ -55,7 +55,10 @@ export default {
             })
             this.cart = res.data
             if (Object.keys(this.store.loggedUser).length === 0) {
-              this.cart = {}
+              const cart = res.data.filter(element => {
+                return element.customerId === 1
+              })
+              this.cart = cart
             }
             else {
               const cart = res.data.filter(element => {
