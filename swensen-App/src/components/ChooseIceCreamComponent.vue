@@ -23,7 +23,7 @@
 
   <div class="flex flex-center justify-around">
     <div class="btn-addToCart-container">
-      <q-btn color="deep-orange" class="b tn-addToCart" push @click="addToCart()" :disabled="selectedFlavour == ''">
+      <q-btn color="deep-orange" class="b tn-addToCart" push @click="addToCart()" :disabled="Object.keys(selectedFlavour).length === 0">
         <div class="row items-center no-wrap">
           <q-icon left name="shopping_cart" />
           <div class="text-center">
@@ -34,7 +34,7 @@
     </div>
 
     <div class="btn-addToCart-container">
-      <q-btn color="grey" class="btn-addToCart" push @click="$emit('showCart')">
+      <q-btn color="grey" class="btn-addToCart" push @click="showCart">
         <div class="row items-center no-wrap">
           <q-icon left name="shopping_cart" />
           <div class="text-center">
@@ -87,35 +87,39 @@ export default {
   },
   methods : {
     addToCart() {
-
-      const nameOfToppings = []
-      this.selectedToppings.map(topping => {
-        nameOfToppings.push(`"${topping.name}"`)
-      })
-      console.log(nameOfToppings)
-
-      console.log("loggeduserid = " + this.store.loggedUser.id)
-
-      const cartDetails = {
-        name:this.menu.name,
-        flavour: this.selectedFlavour.name,
-        toppings: nameOfToppings
+      if (Object.keys(this.store.loggedUser).length === 0) {
+        this.$router.push('signup')
       }
+      else {
+        const nameOfToppings = []
+        this.selectedToppings.map(topping => {
+          nameOfToppings.push(`"${topping.name}"`)
+        })
+        console.log(nameOfToppings)
 
-      const strCartDetails = JSON.stringify(cartDetails)
+        console.log("loggeduserid = " + this.store.loggedUser.id)
 
-      const data = {
-        customerId: Object.keys(this.store.loggedUser).length === 0 ? 1 : this.store.loggedUser.id,
-        totalPrice: this.getPrice() ,
-        details: strCartDetails
+        const cartDetails = {
+          name:this.menu.name,
+          flavour: this.selectedFlavour.name,
+          toppings: nameOfToppings
+        }
+
+        const strCartDetails = JSON.stringify(cartDetails)
+
+        const data = {
+          customerId: Object.keys(this.store.loggedUser).length === 0 ? 1 : this.store.loggedUser.id,
+          totalPrice: this.getPrice() ,
+          details: strCartDetails
+        }
+        this.$api.post("/cart/add", data)
+          .then(res => {
+            console.log(res.data)
+          })
+          .catch(err => {
+            console.log("addToCart() error: " + err)
+          })
       }
-      this.$api.post("/cart/add", data)
-        .then(res => {
-          console.log(res.data)
-        })
-        .catch(err => {
-          console.log("addToCart() error: " + err)
-        })
     },
     getPrice () {
       let sum = this.selectedFlavour.price
@@ -124,6 +128,14 @@ export default {
         sum = sum + topping.price
       })
       return sum
+    },
+    showCart() {
+      if (Object.keys(this.store.loggedUser).length === 0) {
+        this.$router.push('signup')
+      }
+      else {
+        this.$emit('showCart')
+      }
     }
   }
 }

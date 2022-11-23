@@ -2,7 +2,6 @@ const sql = require("./db");
 
 //Constructor
 const Order = function (order) {
-    this.cartId = order.cartId;
     this.customerId = order.customerId;
     this.status = order.status;
     this.date = order.date;
@@ -39,8 +38,8 @@ Order.create = ( newOrder, result ) => {
 
 Order.updateByID = (id, data, result) => {
     sql.query(
-        "UPDATE Orders SET cartId=?, customerId=?, status=?, date=? WHERE id=?",
-        [data.cartId, data.customerId, data.status, data.date, id],
+        "UPDATE Orders SET customerId=?, status=?, date=? WHERE id=?",
+        [data.customerId, data.status, data.date, id],
         (err, res) => {
             if (err) {
                 console.log("Query error: " + err);

@@ -18,9 +18,8 @@ const createNewOrder = (req, res) => {
     }
 
     const orderObj = new Order({
-        cartId: req.body.cartId,
         customerId: req.body.customerId,
-        status: req.body.customerId,
+        status: req.body.status,
         date: req.body.date
     });
 
@@ -41,7 +40,6 @@ const updateOrder = (req, res) =>{
         res.status(400).send({ message: "Content can not be empty."});
     }
     const data = {
-        cartId: req.body.cartId,
         customerId: req.body.customerId,
         status: req.body.customerId,
         date: req.body.date

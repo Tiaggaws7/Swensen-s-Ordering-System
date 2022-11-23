@@ -10,7 +10,7 @@
           </div>
           <div v-else class="flex">
             <a class="q-mr-lg text-h4">Welcome <strong>{{store.loggedUser.name}} </strong></a>
-            <a class="logout" @click="test()">Log out</a>
+            <a class="logout" @click="logout()">Log out</a>
           </div>
         </li>
         <q-icon color="black" name="shopping_cart" size="50px" @click="$emit('showCart')"/>
@@ -33,8 +33,8 @@ export default {
     }
   },
   methods: {
-    test() {
-      console.log(this.store.loggedUser)
+    logout() {
+      this.store.loggedUser = {}
     }
   }
 }

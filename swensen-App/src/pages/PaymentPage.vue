@@ -2,13 +2,13 @@
   <NavComponent @showCart="showCart = true"/>
 <h1 class="text-center">Payment page</h1>
   <div class="flex flex-center column" v-if="paymentOK" >
-    <h3 > Your command will arrive soon !</h3>
+    <h3 > Your order will be processed as soon as possible !</h3>
     <q-btn color="primary" @click="this.$router.push('/')"> Go back to home </q-btn>
   </div>
 
   <q-form
     v-else
-    @submit="onSubmit"
+    @submit.prevent=""
     @reset="onReset"
     class="qform"
   >
@@ -28,6 +28,18 @@
       <q-select class="select" v-model="year" :options="years" label="Year" />
     </div>
 
+    <q-input
+      class="crypto"
+      filled
+      type="number"
+      v-model="crypto"
+      label="Crypto"
+      lazy-rules
+      :rules="[
+          val => validateCrypto(val) || 'Please type a real cryptogram'
+        ]"
+    />
+
     <div class="flex justify-around q-mt-lg">
       <q-btn class="button" label="Submit" type="submit" color="primary" :disable="!validateForm()" @click="validCart()"/>
     </div>
@@ -46,11 +58,12 @@ export default {
   data(){
     return {
       store : useGlobalStateStore(),
-      cardNumber:0,
+      cardNumber:1234567891234567,
       months: ['01','02','03','04','05','06','07','08','09','10','11','12'],
       years: ['2022','2023','2024','2025','2026','2027','2028','2029','2030','2031','2032','2033','2034','2035','2036'],
-      month:0,
-      year:0,
+      month:'05',
+      year:'2025',
+      crypto:321,
       paymentOK: false
     }
   },
@@ -61,14 +74,43 @@ export default {
     validateMonthAndYear(){
       return this.month != 0 && this.year != 0
     },
+    validateCrypto(val){
+      return val && val.length === 3
+    },
     validateForm(){
-      return this.validateCard(this.cardNumber) && this.validateMonthAndYear()
+      return this.validateCard(this.cardNumber) && this.validateMonthAndYear() && this.validateCrypto(this.crypto)
     },
     validCart() {
-      this.store.order.push(this.store.cart)
-      this.paymentOK = true
-      this.store.pendingTransaction++;
-      this.store.cart = []
+      let today = new Date();
+      let dd = today.getDate();
+
+      let mm = today.getMonth()+1;
+      const yyyy = today.getFullYear();
+      if(dd<10)
+      {
+        dd=`0${dd}`;
+      }
+
+      if(mm<10)
+      {
+        mm=`0${mm}`;
+      }
+      today = `${yyyy}-${mm}-${dd}`;
+
+      const id = this.store.loggedUser.id
+
+      const data = {
+        customerId: this.store.loggedUser.id,
+        status: "pending",
+        date: today
+      }
+
+      this.$api.post('/order/add', data)
+        .then(res => {
+          if (res.status == 200) {
+            console.log(res.data)
+          }
+        })
     }
   }
 }
@@ -93,5 +135,10 @@ export default {
 .button {
   width:60%;
   border-radius: 20px;
+}
+
+.crypto {
+  margin: 10px auto;
+  width: 50%;
 }
 </style>
