@@ -2,6 +2,7 @@
   <NavComponent @showCart="showCart = true"/>
   <h1 class="text-center"> Register page</h1>
   <h4 class="text-center" >Enter your informations</h4>
+  <h6 class="text-center">You already have an account, <strong class="text-blue"><a @click="this.$router.push('/signin')">login</a></strong></h6>
   <q-form
     @reset="onReset"
     @submit.prevent=""
@@ -75,16 +76,19 @@
       <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm"/>
     </div>
   </q-form>
+  <q-dialog v-model="showCart" full-width>
+    <CartComponent/>
+  </q-dialog>
 </template>
 
 <script>
 
 import NavComponent from "components/NavComponent";
-
+import CartComponent from "components/CartComponent";
 
 export default {
   name: "SignupPage",
-  components: {NavComponent,},
+  components: {NavComponent, CartComponent},
   data() {
     return {
       name: "",
@@ -94,6 +98,7 @@ export default {
       zipcode: "",
       password: "",
       accept: false,
+      showCart: false
     }
   },
   methods: {

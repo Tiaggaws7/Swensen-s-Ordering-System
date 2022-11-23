@@ -5,6 +5,7 @@ module.exports = (app) => {
     router.get("/all", cart_controller.getAllCart);
     router.put("/:id", cart_controller.updateCart);
     router.delete("/:id", cart_controller.deleteCart);
+    router.delete("/customerCart/:id", cart_controller.deleteCustomerCart);
 
     app.use("/api/cart", router);
 };

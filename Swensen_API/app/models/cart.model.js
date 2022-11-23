@@ -70,6 +70,23 @@ Cart.delete = ( id, result ) => {
         console.log("Deleted Cart id: ", id)
         result(null, {id: id})
     });
+
+}
+
+Cart.deleteCustomerCart = ( id, result ) => {
+    sql.query("DELETE FROM Cart WHERE customerId = ?", id, (err, res) => {
+        if (err) {
+            console.log("Query error: " + err);
+            result(err, null);
+            return;
+        }    if(res.affectedRows == 0){
+            result({kind: "not_found"}, null)
+            return;
+        }
+        console.log("Deleted Cart id: ", id)
+        result(null, {id: id})
+    });
+
 }
 
 module.exports = Cart

@@ -44,17 +44,20 @@
       <q-btn class="button" label="Submit" type="submit" color="primary" :disable="!validateForm()" @click="validCart()"/>
     </div>
   </q-form>
+  <q-dialog v-model="showCart" full-width>
+    <CartComponent/>
+  </q-dialog>
 </template>
 
 <script>
 
 import {useGlobalStateStore} from "stores/globalState";
 import NavComponent from "components/NavComponent";
-
+import CartComponent from "components/CartComponent";
 
 export default {
   name: "PaymentPage",
-  components: {NavComponent,},
+  components: {NavComponent, CartComponent },
   data(){
     return {
       store : useGlobalStateStore(),
@@ -64,7 +67,8 @@ export default {
       month:'05',
       year:'2025',
       crypto:321,
-      paymentOK: false
+      paymentOK: false,
+      showCart: false
     }
   },
   methods:{
@@ -108,7 +112,12 @@ export default {
       this.$api.post('/order/add', data)
         .then(res => {
           if (res.status == 200) {
-            console.log(res.data)
+            this.$api.delete('cart/customerCart/' + this.store.loggedUser.id)
+              .then(res => {
+                if(res.status = 200){
+                  this.paymentOK = true
+                }
+              })
           }
         })
     }

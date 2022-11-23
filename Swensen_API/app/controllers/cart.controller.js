@@ -76,9 +76,27 @@ const deleteCart = (req, res) =>{
     });
 };
 
+const deleteCustomerCart = (req, res) =>{
+    Cart.deleteCustomerCart(req.params.id, (err, result)=>{
+        if(err){
+            if(err.kind == "not_found"){
+                res.status(401).send({
+                    message: "Not found Cart id: " + req.params.id
+                });
+            }else{
+                res.status(500).send({
+                    message: "Error delete Cart id: " + req.params.id
+                });
+            }
+        }
+        else res.send(result);
+    });
+};
+
 module.exports = {
     getAllCart,
     createNewCart,
     updateCart,
-    deleteCart
+    deleteCart,
+    deleteCustomerCart
 };

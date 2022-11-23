@@ -28,16 +28,19 @@
       <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm"/>
     </div>
   </q-form>
+  <q-dialog v-model="showCart" full-width>
+    <CartComponent/>
+  </q-dialog>
 </template>
 
 <script>
 import {useGlobalStateStore} from "stores/globalState";
 import NavComponent from "components/NavComponent";
-
+import CartComponent from "components/CartComponent";
 
 export default {
   name: "SigninPage",
-  components: {NavComponent,},
+  components: {NavComponent, CartComponent},
   data() {
     return {
       store : useGlobalStateStore(),
@@ -45,6 +48,7 @@ export default {
       password: "",
       isPwd: true,
       errorMessage: "",
+      showCart: false
     }
   },
   methods: {

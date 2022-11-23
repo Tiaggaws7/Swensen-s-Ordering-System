@@ -60,14 +60,18 @@
         <q-btn label="Reset" type="reset" color="primary" flat class="q-ml-sm" />
       </div>
     </q-form>
+    <q-dialog v-model="showCart" full-width>
+      <CartComponent/>
+    </q-dialog>
 </template>
 
 <script>
 import NavComponent from "components/NavComponent";
+import CartComponent from "components/CartComponent";
 
 export default {
   name: "PaymentPage",
-  components: {NavComponent,},
+  components: {NavComponent, CartComponent},
   data() {
     return  {
       name : "",
@@ -76,6 +80,7 @@ export default {
       city : "",
       zipcode : "",
       accept: false,
+      showCart: false
     }
   },
   methods: {
