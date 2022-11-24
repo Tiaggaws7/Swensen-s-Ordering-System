@@ -1,24 +1,24 @@
 <template>
-  <div>
+  <div style="max-width: 500px">
     <h3>Welcome to the admin page</h3>
     <q-btn @click="$router.push('/dashboard')">click here to go to dashboard</q-btn>
-    <h6>Here you can manage the orders</h6>
-    <q-list bordered separator v-for="ordered in store.order" :key="ordered.id">
+    <h6>Here you can manage the pending orders</h6>
+    <q-list bordered separator v-for="order in list" :key="order.id">
       <q-item clickable v-ripple >
         <q-item-section >
-          Items : {{ ordered[0] }} {{ ordered[1] }} {{ ordered[2] }}
+          ID : {{order.id}} | Customer ID : {{order.customerId}} | Status : {{order.status}} | Date : {{order.date}}
         </q-item-section
         >
         <q-item-section avatar>
           <q-icon
-            name="edit"
-            color="red"
-            @click.stop="showUpdateForm(topping.id,topping.name,topping.price)"
+            name="check"
+            color="green"
+            @click.stop="updateAccept(order.id,order.customerId,order.date)"
           />
           <q-icon
             name="delete"
             color="red"
-            @click.stop="store.deleteTopping(topping.id)"
+            @click.stop="updateReject(order.id,order.customerId,order.date)"
           />
         </q-item-section>
       </q-item>
@@ -43,7 +43,59 @@ export default {
   data() {
     return {
       store: useGlobalStateStore(),
+      list: [],
+      customerId: "",
+      status:"",
+      date:"",
+
     };
+  },
+  mounted(){
+    this.getPending()
+  },
+  methods:{
+    getPending() {
+      this.$api.get("/order/all/pending")
+        .then((res) => {
+          if (res.status == 200){
+            console.log(res.data)
+            this.list = res.data
+          }
+        })
+        .catch((err) => {
+          console.log("error: " + err);
+        })
+    },
+    updateWithID(id){
+              const data = {
+                customerId: this.customerId,
+                status: this.status,
+                date: this.date
+              }
+              this.$api.put("/order/" + id, data)
+                .then((res) => {
+                  if (res.status == 200){
+                    console.log(res.data)
+                    console.log(this.status)
+                    this.getPending()
+                  }
+                })
+                .catch((err) => {
+                  console.log("updateWithID() error: " + err);
+                })
+            },
+    updateAccept(id,customerId,date){
+      this.customerId = customerId
+      this.status = "accepted"
+      this.date = date
+      this.updateWithID(id)
+    },
+    updateReject(id,customerId,date){
+      this.customerId = customerId
+      this.status = "rejected"
+      this.date = date
+      this.updateWithID(id)
+    }
   },
   components: { AdminToppingsComponent, AdminFlavoursComponent, AdminCategoryComponent, AdminMenusComponent }
 }

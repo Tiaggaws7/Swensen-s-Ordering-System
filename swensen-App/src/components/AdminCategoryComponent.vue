@@ -3,9 +3,8 @@
     <div
         class="q-pa-md"
         style="max-width: 350px"
-        v-if="store.categories.length > 0"
       >
-        <q-list bordered separator v-for="category in store.categories" :key="category.id">
+        <q-list bordered separator v-for="category in categoryList" :key="category.id">
           <q-item clickable v-ripple >
             <q-item-section >
               ID : {{ category.id }} | Name : {{ category.name }}
@@ -20,7 +19,7 @@
               <q-icon
                 name="delete"
                 color="red"
-                @click.stop="store.deleteCategory(category.id)"
+                @click.stop="deleteWithID(category.id)"
               />
             </q-item-section>
           </q-item>
@@ -64,7 +63,7 @@
         <div>
           <h6>Add a new category</h6>
           <q-form
-          @submit="onSubmit"
+          @submit="addCategory"
           @reset="onReset"
           class="q-gutter-md"
         >
@@ -92,17 +91,67 @@
         name: "AdminCategoryComponent",
         data(){
           return{
-            store: useGlobalStateStore(),
+            categoryList: [],
             categoryName: "",
             newCategoryName: "",
             categoryID: "",
             showForm: false,
           }
         },
+        mounted(){
+          this.getAllCategory()
+        },
         methods:{
-            onSubmit(){
-                this.store.addCategory(this.categoryName)
-                this.categoryName = ""
+            getAllCategory() {
+              this.$api.get("/category/all")
+              .then((res) => {
+                if (res.status == 200){
+                  console.log(res.data)
+                this.categoryList = res.data
+                }
+              })
+              .catch((err) => {
+                console.log("getCategory() error: " + err);
+              })
+            },
+            addCategory () {
+              const data = {
+                name: this.categoryName
+              }
+              this.$api
+              .post("/category/add", data)
+              .then((res) => {
+              console.log(res)
+              this.getAllCategory()
+              })
+              this.categoryName = ""
+            },
+            deleteWithID(id){
+              this.$api.delete("/category/" + id)
+              .then((res) => {
+                if (res.status == 200){
+                  console.log(res.data)
+                  this.getAllCategory()
+                }
+              })
+              .catch((err) => {
+                console.log("deleteWithID() error: " + err);
+              })
+            },
+            updateWithID(id){
+              const data = {
+                name: this.newCategoryName
+              }
+              this.$api.put("/category/" + id, data)
+                .then((res) => {
+                  if (res.status == 200){
+                    console.log(res.data)
+                    this.getAllCategory()
+                  }
+                })
+                .catch((err) => {
+                  console.log("updateWithID() error: " + err);
+                })
             },
             onReset(){
               this.categoryName = ""
@@ -115,7 +164,7 @@
               this.newCategoryName = name
             },
             onSubmitUpdate(){
-              this.store.updateCategory(this.categoryID,this.newCategoryName)
+              this.updateWithID(this.categoryID)
               this.newCategoryName = ""
               this.showForm = false
             }

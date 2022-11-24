@@ -1,8 +1,22 @@
 const sql = require("./db");
+let today = new Date();
+      let dd = today.getDate();
+
+      let mm = today.getMonth()+1;
+      const yyyy = today.getFullYear();
+      if(dd<10)
+      {
+        dd=`0${dd}`;
+      }
+
+      if(mm<10)
+      {
+        mm=`0${mm}`;
+      }
+      today = `${yyyy}-${mm}-${dd}`;
 
 //Constructor
 const Order = function (order) {
-    this.cartId = order.cartId;
     this.customerId = order.customerId;
     this.status = order.status;
     this.date = order.date;
@@ -10,6 +24,61 @@ const Order = function (order) {
 
 Order.getAllRecords = (result) => {
     sql.query("SELECT * FROM Orders", (err, res) => {
+        if (err) {
+            console.log("Query error: " + err);
+            result(err, null);
+            return;
+        }
+        result(null, res);
+    });
+};
+
+Order.getPending = (result) => {
+    sql.query("SELECT * FROM Orders WHERE status = 'pending'", (err, res) => {
+        if (err) {
+            console.log("Query error: " + err);
+            result(err, null);
+            return;
+        }
+        result(null, res);
+    });
+};
+
+Order.getPendingCount = (result) => {
+    sql.query("SELECT COUNT(*) as number FROM Orders WHERE status = 'pending'", (err, res) => {
+        if (err) {
+            console.log("Query error: " + err);
+            result(err, null);
+            return;
+        }
+        result(null, res);
+    });
+};
+
+Order.getRejectedCount = (result) => {
+    sql.query("SELECT COUNT(*) FROM Orders WHERE status = 'rejected'", (err, res) => {
+        if (err) {
+            console.log("Query error: " + err);
+            result(err, null);
+            return;
+        }
+        result(null, res);
+    });
+};
+
+Order.getAcceptedCount = (result) => {
+    sql.query("SELECT COUNT(*) FROM Orders WHERE status = 'accepted'", (err, res) => {
+        if (err) {
+            console.log("Query error: " + err);
+            result(err, null);
+            return;
+        }
+        result(null, res);
+    });
+};
+
+Order.getAcceptedTodayCount = (result) => {
+    sql.query(`SELECT COUNT(*) FROM Orders WHERE status = 'accepted' AND date = '${today}'`, (err, res) => {
         if (err) {
             console.log("Query error: " + err);
             result(err, null);
@@ -39,8 +108,8 @@ Order.create = ( newOrder, result ) => {
 
 Order.updateByID = (id, data, result) => {
     sql.query(
-        "UPDATE Orders SET cartId=?, customerId=?, status=?, date=? WHERE id=?",
-        [data.cartId, data.customerId, data.status, data.date, id],
+        "UPDATE Orders SET customerId=?, status=?, date=? WHERE id=?",
+        [data.customerId, data.status, data.date, id],
         (err, res) => {
             if (err) {
                 console.log("Query error: " + err);

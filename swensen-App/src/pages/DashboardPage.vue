@@ -4,12 +4,12 @@
     <q-btn @click="$router.push('/admin')">click here to go to admin page</q-btn>
   </div>
   <div style="display: grid;
-  grid-template-columns: auto auto;
-  justify-content: space-evenly;">
-    <h5>Number of orders today : {{store.dailySell}} </h5>
-    <h5>Number of orders total : {{store.globalSell}}</h5>
-    <h5>Amount of pending transactions (do your job admin) : {{store.pendingTransaction}}</h5>
-    <h5>Amount of rejected transactions : {{store.rejectedTransaction}}</h5>
+        grid-template-columns: auto auto;
+        justify-content: space-evenly;">
+    <h5>Number of orders today : {{daily}} </h5>
+    <h5>Number of orders total : {{global}}</h5>
+    <h5>Amount of pending transactions (do your job admin) : {{pending}}</h5>
+    <h5>Amount of rejected transactions : {{rejected}}</h5>
   </div>
 </template>
 
@@ -20,7 +20,67 @@ export default {
   data (){
     return{
       store: useGlobalStateStore(),
+      global: "",
+      daily: "",
+      pending: "",
+      rejected: "",
     }
+  },
+  mounted(){
+    this.getPendingCount(),
+    this.getAcceptedCount(),
+    this.getRejectedCount(),
+    this.getAcceptedTodayCount()
+  },
+  methods:{
+    getPendingCount() {
+      this.$api.get("/order/all/pending/count")
+        .then((res) => {
+          if (res.status == 200){
+            console.log(res.data)
+            this.pending = res.data
+          }
+        })
+        .catch((err) => {
+          console.log("error: " + err);
+        })
+    },
+    getAcceptedCount() {
+      this.$api.get("/order/all/accepted/count")
+        .then((res) => {
+          if (res.status == 200){
+            console.log(res.data)
+            this.global = res.data
+          }
+        })
+        .catch((err) => {
+          console.log("error: " + err);
+        })
+    },
+    getAcceptedTodayCount() {
+      this.$api.get("/order/all/accepted/today/count")
+        .then((res) => {
+          if (res.status == 200){
+            console.log(res.data)
+            this.daily = res.data
+          }
+        })
+        .catch((err) => {
+          console.log("error: " + err);
+        })
+    },
+    getRejectedCount() {
+      this.$api.get("/order/all/rejected/count")
+        .then((res) => {
+          if (res.status == 200){
+            console.log(res.data)
+            this.rejected = res.data
+          }
+        })
+        .catch((err) => {
+          console.log("error: " + err);
+        })
+    },
   }
 }
 </script>

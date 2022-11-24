@@ -1,8 +1,27 @@
 <template>
   <q-page>
-
-    <q-input v-model="category" label=" Add category" />
-    <q-btn color="primary" label="valider" @click="addCategory" />
+    <q-btn @click="addCategory">yop</q-btn>
+    nombre de requette pending {{list3}}
+    <q-list >
+      <q-item clickable v-ripple >
+        <q-item-section >
+          {{list2}} 
+        </q-item-section
+        >
+        <q-item-section avatar>
+          <q-icon
+            name="edit"
+            color="red"
+            @click.stop="updateWithID(l.id)"
+          />
+          <q-icon
+            name="delete"
+            color="red"
+            @click.stop="deleteWithID(l.id)"
+          />
+        </q-item-section>
+      </q-item>
+    </q-list>
 
     <NavComponent @showCart="showCart = true"/>
     <ChooseMenuComponent @showCart="showCart = true"/>
@@ -20,6 +39,7 @@ import ChooseIceCream from "components/ChooseIceCreamComponent";
 import NavComponent from "components/NavComponent";
 import CartComponent from "components/CartComponent";
 import ChooseMenuComponent from "components/ChooseMenuComponent"
+import axios from 'axios';
 
 export default defineComponent({
   name: 'IndexPage',
@@ -28,25 +48,85 @@ export default defineComponent({
     return {
       showCart : false,
       personalize : false,
-      category: ""
+      categoryName: "updated",
+      list: [],
+      list2: "",
+      list3: "",
+      id: "8"
     }
   },
+  mounted(){
+    this.getPending()
+  },
   methods: {
+
+    getAllCategory() {
+      this.$api.get("/category/all")
+        .then((res) => {
+          if (res.status == 200){
+            console.log(res.data)
+            this.list = res.data
+          }
+        })
+        .catch((err) => {
+          console.log("getCategory() error: " + err);
+        })
+    },
+    getPending() {
+      this.$api.get("/order/all/pending/count")
+        .then((res) => {
+          if (res.status == 200){
+            console.log(res.data)
+            this.list2 = res.data
+          }
+        })
+        .catch((err) => {
+          console.log("getCategory() error: " + err);
+        })
+    },
+    updateWithID(id){
+      const data = {
+                name: this.categoryName
+              }
+      this.$api.put("/category/" + id, data)
+        .then((res) => {
+          if (res.status == 200){
+            console.log(res.data)
+
+            this.getAllCategory()
+          }
+        })
+        .catch((err) => {
+          console.log("updateWithID() error: " + err);
+        })
+    },
+    deleteWithID(id){
+      this.$api.delete("/category/" + id)
+        .then((res) => {
+          if (res.status == 200){
+            console.log(res.data)
+            this.getAllCategory()
+          }
+        })
+        .catch((err) => {
+          console.log("deleteWithID() error: " + err);
+        })
+    },
+    addCategory () {
+              const data = {
+                name: "je vais etre update"
+              }
+              this.$api
+              .post("/category/add", data)
+              .then((res) => {
+              console.log(res)
+              this.getAllCategory()
+              })
+              
+            },
     toggleShowCart(){
       this.showCart = !this.showCart
     },
-    addCategory () {
-      console.log("Maybe try to put api in dubug, having the log can be useful but it's maybe not the problem" +
-        " just to check is the api is called")
-      const data = {
-        name: this.name
-      }
-      this.$api
-        .post("/category/add", data)
-        .then((res) => {
-          console.log(res)
-        })
-      },
-    },
-  })
+  },
+})
 </script>
