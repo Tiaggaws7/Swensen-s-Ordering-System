@@ -1,6 +1,5 @@
 <template>
   <NavComponent @showCart="showCart = true"/>
-  <div>
   <div style="max-width: 500px">
     <h3>Welcome to the admin page</h3>
     <q-btn @click="$router.push('/dashboard')">click here to go to dashboard</q-btn>
