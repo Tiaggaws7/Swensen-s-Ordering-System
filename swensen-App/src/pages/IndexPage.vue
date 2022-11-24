@@ -13,7 +13,6 @@
 
 <script>
 import { defineComponent } from 'vue'
-import ChooseIceCream from "components/ChooseIceCreamComponent";
 import NavComponent from "components/NavComponent";
 import CartComponent from "components/CartComponent";
 import ChooseMenuComponent from "components/ChooseMenuComponent"
@@ -24,8 +23,6 @@ export default defineComponent({
   data() {
     return {
       showCart : false,
-      personalize : false,
-      category: ""
     }
   },
   methods: {

@@ -3,9 +3,8 @@
   <div
     class="q-pa-md"
     style="max-width: 350px"
-    v-if="store.flavours.length > 0"
   >
-    <q-list bordered separator v-for="flavour in store.flavours" :key="flavour.id">
+    <q-list bordered separator v-for="flavour in flavourList" :key="flavour.id">
       <q-item clickable v-ripple>
         <q-item-section>
           ID : {{ flavour.id }} | Name : {{ flavour.name }} | Price : {{ flavour.price }} Image : <img :src="require(`../assets/${flavour.image}`)" width="220" height="200">
@@ -21,7 +20,7 @@
           <q-icon
             name="delete"
             color="red"
-            @click.stop="store.deleteFlavour(flavour.id)"
+            @click.stop="deleteWithID(flavour.id)"
           />
         </q-item-section>
       </q-item>
@@ -89,7 +88,7 @@
   <div>
     <h6>Add a new scoop</h6>
     <q-form
-      @submit="onSubmit"
+      @submit="addFlavour"
       @reset="onReset"
       class="q-gutter-md"
     >
@@ -146,7 +145,7 @@ export default {
   name: "AdminFlavoursComponent",
   data(){
     return{
-      store: useGlobalStateStore(),
+      flavourList: [],
       flavourName: "",
       flavourPrice: "",
       flavourImage: "",
@@ -157,15 +156,67 @@ export default {
       showForm: false,
     }
   },
+  mounted(){
+          this.getAllFlavour()
+        },
   methods:{
-    onSubmit(){
-      console.log(this.flavourImage.name)
-      this.store.addFlavour(this.flavourName,this.flavourPrice,this.flavourImage.name)
-      this.flavourName = ""
-      this.flavourPrice = ""
-      this.flavourImage = ""
-
-    },
+    addFlavour () {
+      const data = {
+        name: this.flavourName,
+        price: this.flavourPrice,
+        image: this.flavourImage.name
+      }
+      this.$api
+        .post("/flavour/add", data)
+        .then((res) => {
+          console.log(res)
+          this.getAllFlavour()
+        })
+        this.flavourName = ""
+        this.flavourPrice = ""
+        this.flavourImage = ""
+      },
+      updateWithID(id){
+        const data = {
+          name: this.newFlavourName,
+          price: this.newFlavourPrice,
+          image: this.newFlavourImage.name
+        }
+        this.$api.put("/flavour/" + id, data)
+          .then((res) => {
+            if (res.status == 200){
+              console.log(res.data)
+              this.getAllFlavour()
+            }
+          })
+          .catch((err) => {
+            console.log("updateWithID() error: " + err);
+          })
+      },
+      getAllFlavour() {
+        this.$api.get("/flavour/all")
+        .then((res) => {
+          if (res.status == 200){
+            console.log(res.data)
+          this.flavourList = res.data
+          }
+        })
+        .catch((err) => {
+          console.log("getFlavour() error: " + err);
+        })
+      },
+      deleteWithID(id){
+        this.$api.delete("/flavour/" + id)
+        .then((res) => {
+          if (res.status == 200){
+            console.log(res.data)
+            this.getAllFlavour()
+          }
+        })
+        .catch((err) => {
+          console.log("deleteWithID() error: " + err);
+        })
+      },
     onReset(){
       this.flavourName = ""
       this.flavourPrice = ""
@@ -184,7 +235,7 @@ export default {
 
     },
     onSubmitUpdate(){
-      this.store.updateFlavour(this.flavourID,this.newFlavourName,this.newFlavourPrice,this.newFlavourImage.name)
+      this.updateWithID(this.flavourID)
       this.newFlavourName = ""
       this.newFlavourPrice = ""
       this.newFlavourImage = ""

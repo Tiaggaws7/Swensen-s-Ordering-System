@@ -3,9 +3,8 @@
   <div
     class="q-pa-md"
     style="max-width: 350px"
-    v-if="store.toppings.length > 0"
   >
-    <q-list bordered separator v-for="topping in store.toppings" :key="topping.id">
+    <q-list bordered separator v-for="topping in toppingList" :key="topping.id">
       <q-item clickable v-ripple >
         <q-item-section >
           ID : {{ topping.id }} | Name : {{ topping.name }} | Price : {{ topping.price }}
@@ -20,7 +19,7 @@
           <q-icon
             name="delete"
             color="red"
-            @click.stop="store.deleteTopping(topping.id)"
+            @click.stop="deleteWithID(topping.id)"
           />
         </q-item-section>
       </q-item>
@@ -75,7 +74,7 @@
   <div>
     <h6>Add a new topping</h6>
     <q-form
-      @submit="onSubmit"
+      @submit="addTopping"
       @reset="onReset"
       class="q-gutter-md"
     >
@@ -114,7 +113,7 @@ export default {
   name: "AdminToppingsComponent",
   data(){
     return{
-      store: useGlobalStateStore(),
+      toppingList: [],
       toppingName: "",
       toppingPrice: "",
       newToppingName: "",
@@ -123,12 +122,64 @@ export default {
       showForm: false,
     }
   },
+  mounted(){
+          this.getAllTopping()
+        },
   methods:{
-    onSubmit(){
-      this.store.addTopping(this.toppingName,this.toppingPrice)
-      this.toppingName = ""
-      this.toppingPrice = ""
-    },
+    addTopping () {
+      const data = {
+        name: this.toppingName,
+        price: this.toppingPrice
+      }
+      this.$api
+        .post("/toppings/add", data)
+        .then((res) => {
+          console.log(res)
+          this.getAllTopping()
+        })
+        this.toppingName = ""
+        this.toppingPrice = ""
+      },
+      getAllTopping() {
+        this.$api.get("/toppings/all")
+        .then((res) => {
+          if (res.status == 200){
+            console.log(res.data)
+          this.toppingList = res.data
+          }
+        })
+        .catch((err) => {
+          console.log("getTopping() error: " + err);
+        })
+      },
+      deleteWithID(id){
+        this.$api.delete("/toppings/" + id)
+        .then((res) => {
+          if (res.status == 200){
+            console.log(res.data)
+            this.getAllTopping()
+          }
+        })
+        .catch((err) => {
+          console.log("deleteWithID() error: " + err);
+        })
+      },
+      updateWithID(id){
+              const data = {
+                name: this.newToppingName,
+                price: this.newToppingPrice
+              }
+              this.$api.put("/toppings/" + id, data)
+                .then((res) => {
+                  if (res.status == 200){
+                    console.log(res.data)
+                    this.getAllTopping()
+                  }
+                })
+                .catch((err) => {
+                  console.log("updateWithID() error: " + err);
+                })
+            },
     onReset(){
       this.toppingName = ""
       this.toppingPrice = ""
@@ -143,7 +194,7 @@ export default {
       this.newToppingPrice = price
     },
     onSubmitUpdate(){
-      this.store.updateTopping(this.toppingID,this.newToppingName,this.newToppingPrice)
+      this.updateWithID(this.toppingID)
       this.newToppingName = ""
       this.newToppingPrice = ""
       this.showForm = false
